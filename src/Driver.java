@@ -52,11 +52,12 @@ public class Driver {
             }
         }
 
-        System.out.println(Arrays.toString(outputList.toArray()));
-        return null;
+        outputList.sort(String::compareTo);
+        //System.out.println(Arrays.toString(outputList.toArray()));
+        return outputList;
     }
 
     public static void main(String[] args) {
-        extractNames("baby1990.html");
+        extractNames("baby1998.html");
     }
 }
