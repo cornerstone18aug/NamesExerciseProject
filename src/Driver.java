@@ -16,10 +16,10 @@ public class Driver {
         String yearRegex = "<h3 align=\"center\">Popularity\\sin\\s(\\d\\d\\d\\d)</h3>";
         String namesRegex = "<tr align=\"right\"><td>(\\d+)</td><td>(\\w+)</td><td>(\\w+)</td>";
 
-        try{
+        try {
 
             inputReader = new BufferedReader(new FileReader(filename));
-            //outputWriter = new PrintWriter(new FileWriter("TestFile"));
+            outputWriter = new PrintWriter(new FileWriter(filename + "_Summary File"));
 
             String line;
             Pattern pattern;
@@ -53,11 +53,22 @@ public class Driver {
         }
 
         outputList.sort(String::compareTo);
-        //System.out.println(Arrays.toString(outputList.toArray()));
+        for (String line : outputList) {
+            outputWriter.println(line);
+        }
+
+        outputWriter.close();
+        System.out.println(Arrays.toString(outputList.toArray()));
+
         return outputList;
     }
 
     public static void main(String[] args) {
-        extractNames("baby1998.html");
+        String[] filenames = {"baby1990.html", "baby1992.html", "baby1994.html", "baby1996.html",
+                "baby1998.html", "baby2000.html", "baby2002.html", "baby2004.html", "baby2006.html", "baby2008.html"};
+        for (int i = 0; i < filenames.length; i++) {
+            extractNames(filenames[i]);
+        }
+
     }
 }
