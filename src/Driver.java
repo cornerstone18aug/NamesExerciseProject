@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,38 +19,58 @@ public class Driver {
 
         try {
 
-            inputReader = new BufferedReader(new FileReader(filename));
+            //inputReader = new BufferedReader(new FileReader(filename));
+            File file = new File(filename);
+            FileInputStream fis = new FileInputStream(file);
+            byte[] data = new byte[(int) file.length()];
+            fis.read(data);
+            fis.close();
+
+            String str = new String(data, "UTF-8");
             outputWriter = new PrintWriter(new FileWriter(filename + "_Summary File"));
 
-            String line;
-            Pattern pattern;
-            Matcher matcher;
+            //Old implementation
 
-            while ((line = inputReader.readLine()) != null){
-                pattern = Pattern.compile(namesRegex);
-                matcher = pattern.matcher(line);
-                if(matcher.matches()){
-                    outputList.add(matcher.group(2) + " " + matcher.group(1));
-                    outputList.add(matcher.group(3) + " " + matcher.group(1));
-                } else{
-                    pattern = Pattern.compile(yearRegex);
-                    matcher = pattern.matcher(line);
-                    if(matcher.matches()){
-                        outputList.add(matcher.group(1));
-                    }
-                }
+//            String line;
+//            Pattern pattern;
+//            Matcher matcher;
+//
+//            while ((line = inputReader.readLine()) != null){
+//                pattern = Pattern.compile(namesRegex);
+//                matcher = pattern.matcher(line);
+//                if(matcher.matches()){
+//                    outputList.add(matcher.group(2) + " " + matcher.group(1));
+//                    outputList.add(matcher.group(3) + " " + matcher.group(1));
+//                } else{
+//                    pattern = Pattern.compile(yearRegex);
+//                    matcher = pattern.matcher(line);
+//                    if(matcher.matches()){
+//                        outputList.add(matcher.group(1));
+//                    }
+//                }
+//            }
+
+
+            Pattern pattern = Pattern.compile(namesRegex);
+            Pattern pattern1 = Pattern.compile(yearRegex);
+            Matcher matcher = pattern.matcher(str);
+            Matcher matcher1 = pattern1.matcher(str);
+
+            if(matcher1.find()){
+                outputList.add(matcher1.group(1));
             }
+            while(matcher.find()){
+                outputList.add(matcher.group(2) + " " + matcher.group(1));
+                outputList.add(matcher.group(3) + " " + matcher.group(1));
+            }
+
 
         } catch (FileNotFoundException e){
             System.out.println(filename + " not found.");
         } catch (IOException e){
             System.out.println("IO Exception");
         } finally {
-            try{
-                inputReader.close();
-            } catch (IOException e){
-                System.out.println("Not close");
-            }
+
         }
 
         outputList.sort(String::compareTo);
@@ -58,7 +79,7 @@ public class Driver {
         }
 
         outputWriter.close();
-        System.out.println(Arrays.toString(outputList.toArray()));
+        //System.out.println(Arrays.toString(outputList.toArray()));
 
         return outputList;
     }
